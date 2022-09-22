@@ -5,6 +5,7 @@
   "main": "main.js",
   "scripts": {
     "test": "mocha --reporter spec"
+    "start": "node main.js"
   },
   "author": "Rocio Ferreiro",
   "license": "ISC",
