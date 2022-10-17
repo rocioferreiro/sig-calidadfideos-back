@@ -1,14 +1,16 @@
-{
-  "development": {
-    "url": "postgres://root:password@localhost:5432/sig-db",
-    "dialect": "postgres"
+require('dotenv').config();
+
+module.exports = {
+  development: {
+    url: process.env.DEV_DATABASE_URL,
+    dialect: 'postgres',
   },
-  "test": {
-    "url": "postgres://sig_api:KL7N9n0tjFiShgt@top2.nearest.of.sig-api-db.internal:5432/sig_api",
-    "dialect": "postgres"
+  test: {
+    url: process.env.DATABASE_URL,
+    dialect: 'postgres',
   },
-  "production": {
-    "url": ${process.env.DATABASE_URL},
-    "dialect": "postgres"
-  }
-}
+  production: {
+    url: process.env.DATABASE_URL,
+    dialect: 'postgres',
+  },
+};
