@@ -1,9 +1,12 @@
-# fly.toml file generated for sig-api on 2022-09-30T13:16:05-03:00
+# fly.toml file generated for sig-api on 2022-10-17T00:12:22-03:00
 
 app = "sig-api"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
+
+[build]
+  builder = "heroku/buildpacks:20"
 
 [env]
   PGDATABASE = "sig-db"
@@ -12,6 +15,7 @@ processes = []
   PGPORT = 5432
   PGUSER = "postgres"
   PORT = "8080"
+  NODE_ENV = "production"
 
 [experimental]
   allowed_public_ports = []
