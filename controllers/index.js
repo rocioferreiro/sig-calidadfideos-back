@@ -57,21 +57,16 @@ const getBatches = async (req, res) => {
     const batches = await models.Batch.findAll({
       include: [
         {
-          model: models.BatchSamples,
-          as: "samples",
-          include: [
-            {
-              model: models.Sample,
-              as: "sample"
-            }
-          ]
+          model: models.Sample,
+          as: "samples"
         },
         {
           model: models.Product,
-          as: "product"
+          as: 'product'
         }
       ]
     });
+
     return res.status(200).json({ batches });
   } catch (error) {
     return res.status(500).send(error.message);
@@ -85,18 +80,12 @@ const getBatchById = async (req, res) => {
       where: { id: batchId },
       include: [
         {
-          model: models.BatchSamples,
-          as: "samples",
-          include: [
-            {
-              model: models.Sample,
-              as: "sample"
-            }
-          ]
+          model: models.Sample,
+          as: "samples"
         },
         {
           model: models.Product,
-          as: "product"
+          as: 'product'
         }
       ]
     });
@@ -116,18 +105,12 @@ const getBatchesByState = async (req, res) => {
       where: { state: batchState },
       include: [
         {
-          model: models.BatchSamples,
-          as: "samples",
-          include: [
-            {
-              model: models.Sample,
-              as: "sample"
-            }
-          ]
+          model: models.Sample,
+          as: "samples"
         },
         {
           model: models.Product,
-          as: "product"
+          as: 'product'
         }
       ]
     });

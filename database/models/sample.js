@@ -23,11 +23,15 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: 'CASCADE',
       });
 
-      Sample.hasMany(models.BatchSample, {
-        foreignKey: 'sampleId',
-        as: 'batchSamples',
-        onDelete: 'CASCADE',
-      });
+      Sample.belongsToMany(models.Batch, {
+        through: models.BatchSample,
+        as: 'batches'
+      })
+      // Sample.hasMany(models.BatchSample, {
+      //   foreignKey: 'sampleId',
+      //   as: 'batchSamples',
+      //   onDelete: 'CASCADE',
+      // });
     }
   }
   Sample.init({

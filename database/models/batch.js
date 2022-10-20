@@ -11,10 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Batch.hasMany(models.BatchSample, {
-        foreignKey: 'batchId',
-        as: 'batchSamples',
-        onDelete: 'CASCADE',
+      // Batch.hasMany(models.BatchSample, {
+      //   foreignKey: 'batchId',
+      //   as: 'batchSamples',
+      //   onDelete: 'CASCADE',
+      // })
+      Batch.belongsToMany(models.Sample, {
+        through: models.BatchSample,
+        as: 'samples'
       })
       Batch.belongsTo(models.Product, {
         foreignKey: 'productId',
