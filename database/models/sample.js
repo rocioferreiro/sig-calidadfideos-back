@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Sample.hasMany(models.ChangeReport, {
         foreignKey: 'lastSampleId',
+        allowNull: true,
         as: 'oldReports',
         onDelete: 'CASCADE',
       });

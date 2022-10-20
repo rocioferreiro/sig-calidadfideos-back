@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   BatchSample.init({
     BatchId: DataTypes.INTEGER,
+    batchId: DataTypes.INTEGER,
     SampleId: DataTypes.INTEGER
   }, {
     sequelize,

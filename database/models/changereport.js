@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
 
       ChangeReport.belongsTo(models.Sample, {
         foreignKey: 'lastSampleId',
+        allowNull: true,
         as: 'lastSample',
         onDelete: 'CASCADE',
       });

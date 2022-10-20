@@ -31,6 +31,13 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
+// db.User.sync({force: true});
+// db.Product.sync({force: true});
+// db.Sample.sync({force: true});
+// db.Batch.sync({force: true});
+// db.BatchSample.sync({force: true});
+// db.ChangeReport.sync({force: true});
+
 sequelize.sync();
 
 module.exports = db;

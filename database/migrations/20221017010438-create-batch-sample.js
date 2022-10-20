@@ -13,6 +13,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
+      batchId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
       SampleId: {
         type: Sequelize.INTEGER,
         allowNull: false
