@@ -19,6 +19,13 @@ module.exports = {
       'Samples',
       [
         {
+          id:1,
+          state: 'NO_SAMPLE',
+          packingDate: new Date('1/1/1800'),
+          createdAt: new Date('1/1/1800'),
+          updatedAt: new Date('1/1/1800'),
+        },
+        {
           id:30,
           state: 'trizado',
           packingDate: new Date('10/10/2022'),

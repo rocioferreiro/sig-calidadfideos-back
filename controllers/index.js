@@ -93,7 +93,11 @@ const getBatchById = async (req, res) => {
       let changes = [batch.samples.length];
       for(let i = 0; i < batch.samples.length; i ++) {
         changes[i] = await models.ChangeReport.findOne({
-          where: {newSampleId: batch.samples[i].id}
+          where: {newSampleId: batch.samples[i].id},
+          include: [{
+            model: models.User,
+            as: "user"
+          }]
         })
       }
       return res.status(200).json({ batch, changes });
@@ -120,8 +124,21 @@ const getBatchesByState = async (req, res) => {
         }
       ]
     });
+    let changes = [batches.length];
+    for(let i = 0; i < batches.length; i++){
+      changes[i] = [batches[i].samples.length];
+      for(let j = 0; j < batches[i].samples.length; j++){
+        changes[i][j] = await models.ChangeReport.findOne({
+          where: {newSampleId: batches[i].samples[j].id},
+          include: [{
+            model: models.User,
+            as: "user"
+          }]
+        })
+      }
+    }
     if (batches) {
-      return res.status(200).json({ batches });
+      return res.status(200).json({ batches, changes });
     }
     return res.status(404).send("Batches with the specified state don't exist");
   } catch (error) {
