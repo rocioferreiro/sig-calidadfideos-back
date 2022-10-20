@@ -13,10 +13,13 @@ module.exports = {
      * }], {});
     */
 
+    await queryInterface.bulkDelete('Users', null, {});
+
     await queryInterface.bulkInsert(
       'Users',
       [
         {
+          id:1,
           name: 'Jane Doe',
           email: 'janedoe@example.com',
           password: 'pass123',
@@ -24,6 +27,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
+          id:2,
           name: 'Jon Doe',
           email: 'jondoe@example.com',
           password: 'pass123',
@@ -31,6 +35,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
+          id:3,
           name: 'Marc Sam',
           email: 'ms@gmail.com',
           password: 'pass123',
@@ -38,6 +43,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
+          id:4,
           name: 'Alice John',
           email: 'aj@gmail.com',
           password: 'pass123',
@@ -45,6 +51,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
+          id:5,
           name: 'Peter Parker',
           email: 'pp@gmail.com',
           password: 'pass123',
