@@ -90,7 +90,13 @@ const getBatchById = async (req, res) => {
       ]
     });
     if (batch) {
-      return res.status(200).json({ batch });
+      let changes = [batch.samples.length];
+      for(let i = 0; i < batch.samples.length; i ++) {
+        changes[i] = await models.ChangeReport.findOne({
+          where: {newSampleId: batch.samples[i].id}
+        })
+      }
+      return res.status(200).json({ batch, changes });
     }
     return res.status(404).send("Batch with the specified ID does not exists");
   } catch (error) {

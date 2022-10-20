@@ -9,7 +9,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      batchId: {
+      BatchId: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
