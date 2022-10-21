@@ -12,7 +12,7 @@ router.post('/batches', controllers.createBatch);
 router.get('/batches', controllers.getBatches);
 router.get('/batches/:batchId', controllers.getBatchById);
 router.get('/batches/state/:batchState', controllers.getBatchesByState);
-router.post('/samples/:batchId', controllers.createSample);
+router.post('/samples/:batchId/:userId', controllers.createSample);
 router.get('/products', controllers.getProducts);
 
 module.exports = router;

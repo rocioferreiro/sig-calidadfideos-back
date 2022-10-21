@@ -148,11 +148,18 @@ const getBatchesByState = async (req, res) => {
 
 const createSample = async (req, res) => {
   try {
-    const { batchId } = req.params;
+    const { batchId, userId } = req.params;
     const sample = await models.Sample.create(req.body);
-    const relation = await models.BatchSample.create({batchId: batchId, sampleId: sample.id});
+    const relation = await models.BatchSample.create({BatchId: batchId, batchId: batchId, SampleId: sample.dataValues.id});
+    const change = await models.ChangeReport.create({
+      type: 'creation',
+      date: new Date(),
+      lastSampleId: 1,
+      newSampleId: sample.dataValues.id,
+      userId: userId
+    });
     return res.status(201).json({
-      sample, relation
+      sample, relation, change
     });
   } catch (error) {
     return res.status(500).json({ error: error.message });
