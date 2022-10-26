@@ -23,7 +23,7 @@ module.exports = {
           productId: 10,
           batchNumber: 123,
           productionDate: new Date('10/10/2022'),
-          state: 'PARA_LIBERAR',
+          state: 'PARA LIBERAR',
           shatterLevel: 11,
           createdAt: new Date(),
           updatedAt: new Date(),

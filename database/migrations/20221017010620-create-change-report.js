@@ -15,6 +15,9 @@ module.exports = {
       date: {
         type: Sequelize.DATE
       },
+      shatterLevel: {
+        type: Sequelize.INTEGER
+      },
       lastSampleId: {
         type: Sequelize.INTEGER,
         allowNull: false

@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
   ChangeReport.init({
     type: DataTypes.STRING,
     date: DataTypes.DATE,
+    shatterLevel: DataTypes.INTEGER,
     lastSampleId: DataTypes.INTEGER,
     newSampleId: DataTypes.INTEGER,
     userId: DataTypes.INTEGER

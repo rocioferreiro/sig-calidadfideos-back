@@ -146,6 +146,47 @@ const getBatchesByState = async (req, res) => {
   }
 };
 
+const newSample = async (batchId, userId, type, shatterLevel, sampleBody) => {
+  try {
+    const sample = await models.Sample.create(sampleBody);
+    const batch = await models.Batch.findOne({
+      where: { id: batchId },
+      include: [
+        {
+          model: models.Sample,
+          as: "samples"
+        },
+        {
+          model: models.Product,
+          as: 'product'
+        }
+      ]
+    });
+    const relation = await models.BatchSample.create({BatchId: batchId, batchId: batchId, SampleId: sample.dataValues.id});
+    const change = await models.ChangeReport.create({
+      type: type,
+      date: new Date(),
+      shatterLevel: shatterLevel,
+      lastSampleId: type === 'visual' ? batch.samples[0].id : batch.samples.filter(s => s.state === 'visual')[0].id,
+      newSampleId: sample.dataValues.id,
+      userId: userId
+    });
+    let batchState = '';
+    if(type === 'visual') batchState = 'PROCESANDO';
+    else {
+      if(shatterLevel < 15) batchState = 'PARA LIBERAR';
+      else if(shatterLevel < 25) batchState = 'CONCESION';
+      else batchState = 'RECHAZADO';
+    }
+    await models.Batch.update(
+      { shatterLevel: shatterLevel, state: batchState },
+      { where: { id: batchId }} )
+    return { sample, relation, change };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
 const createSample = async (req, res) => {
   try {
     const { batchId, userId } = req.params;
@@ -154,6 +195,7 @@ const createSample = async (req, res) => {
     const change = await models.ChangeReport.create({
       type: 'creation',
       date: new Date(),
+      shatterLevel: 0,
       lastSampleId: 1,
       newSampleId: sample.dataValues.id,
       userId: userId
@@ -175,6 +217,22 @@ const getProducts = async (req, res) => {
   }
 }
 
+const visualEdit = async (req, res) => {
+  const { batchId, userId } = req.params;
+  const { sample, shatterLevel } = req.body;
+  const result = await newSample(batchId, userId, 'visual', shatterLevel, sample);
+  if(result.error) return res.status(500).json(result);
+  return res.status(201).json(result);
+}
+
+const cookingEdit = async (req, res) => {
+  const { batchId, userId } = req.params;
+  const { sample, shatterLevel } = req.body;
+  const result = await newSample(batchId, userId, 'coccion', shatterLevel, sample);
+  if(result.error) return res.status(500).json(result);
+  return res.status(201).json(result);
+}
+
 
 module.exports = {
   getUsers,
@@ -185,9 +243,7 @@ module.exports = {
   getBatchById,
   getBatchesByState,
   createSample,
-  getProducts
-  // getAllPosts,
-  // getPostById,
-  // updatePost,
-  // deletePost
+  getProducts,
+  visualEdit,
+  cookingEdit
 };
