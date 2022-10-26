@@ -108,6 +108,21 @@ const getBatchById = async (req, res) => {
   }
 };
 
+const getSampleById = async (req, res) => {
+  try {
+    const { sampleId } = req.params;
+    const sample = await models.Sample.findOne({
+      where: { id: sampleId }
+    });
+    if (sample) {
+      return res.status(200).json({ sample });
+    }
+    return res.status(404).send("Sample with the specified ID does not exists");
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+};
+
 const getBatchesByState = async (req, res) => {
   try {
     const { batchState } = req.params;
@@ -245,5 +260,6 @@ module.exports = {
   createSample,
   getProducts,
   visualEdit,
-  cookingEdit
+  cookingEdit,
+  getSampleById
 };

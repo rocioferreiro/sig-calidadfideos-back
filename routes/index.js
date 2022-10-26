@@ -11,6 +11,7 @@ router.post('/login', controllers.login);
 router.post('/batches', controllers.createBatch);
 router.get('/batches', controllers.getBatches);
 router.get('/batches/:batchId', controllers.getBatchById);
+router.get('/sample/:sampleId', controllers.getSampleById);
 router.get('/batches/state/:batchState', controllers.getBatchesByState);
 router.post('/samples/:batchId/:userId', controllers.createSample);
 router.post('/visual/:batchId/:userId', controllers.visualEdit);
