@@ -58,7 +58,10 @@ const getBatches = async (req, res) => {
       include: [
         {
           model: models.Sample,
-          as: "samples"
+          as: "samples",
+          order: [
+            ['createdAt', 'DESC']
+          ]
         },
         {
           model: models.Product,
