@@ -100,6 +100,11 @@ const getBatchById = async (req, res) => {
           }]
         })
       }
+      changes.sort(function(a,b){
+        // Turn your strings into dates, and then subtract them
+        // to get a value that is either negative, positive, or zero.
+        return new Date(b.date) - new Date(a.date);
+      });
       return res.status(200).json({ batch, changes });
     }
     return res.status(404).send("Batch with the specified ID does not exists");

@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
   Product.init({
     type: DataTypes.STRING,
     brand: DataTypes.STRING,
+    SKU: DataTypes.BIGINT,
     weight: DataTypes.DOUBLE
   }, {
     sequelize,

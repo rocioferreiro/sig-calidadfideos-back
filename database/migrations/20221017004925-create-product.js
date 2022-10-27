@@ -15,6 +15,9 @@ module.exports = {
       brand: {
         type: Sequelize.TEXT
       },
+      SKU: {
+        type: Sequelize.BIGINT
+      },
       weight: {
         type: Sequelize.DOUBLE
       },

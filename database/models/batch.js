@@ -27,10 +27,10 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
+
   Batch.init({
-    sku: DataTypes.INTEGER,
     productId: DataTypes.INTEGER,
-    batchNumber: DataTypes.INTEGER,
+    batchNumber: DataTypes.BIGINT,
     productionDate: DataTypes.DATE,
     state: DataTypes.STRING,
     shatterLevel: DataTypes.INTEGER

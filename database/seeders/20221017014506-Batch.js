@@ -19,9 +19,8 @@ module.exports = {
       [
         {
           id:20,
-          sku: 12343275,
           productId: 10,
-          batchNumber: 123,
+          batchNumber: 1234567891,
           productionDate: new Date('10/10/2022'),
           state: 'PARA LIBERAR',
           shatterLevel: 11,
@@ -30,9 +29,8 @@ module.exports = {
         },
         {
           id:21,
-          sku: 67843212,
           productId: 11,
-          batchNumber: 546,
+          batchNumber: 5466784321,
           productionDate: new Date('10/14/2022'),
           state: 'PROCESANDO',
           shatterLevel: 14,
@@ -41,9 +39,8 @@ module.exports = {
         },
         {
           id:22,
-          sku: 45645323,
           productId: 12,
-          batchNumber: 765,
+          batchNumber: 7645645323,
           productionDate: new Date('10/18/2022'),
           state: 'PROCESANDO',
           shatterLevel: 22,
@@ -52,9 +49,8 @@ module.exports = {
         },
         {
           id:23,
-          sku: 43241765,
           productId: 13,
-          batchNumber: 234,
+          batchNumber: 2343241765,
           productionDate: new Date('10/20/2022'),
           state: 'PROCESANDO',
           shatterLevel: 0,
@@ -63,9 +59,8 @@ module.exports = {
         },
         {
           id:24,
-          sku: 98741456,
           productId: 14,
-          batchNumber: 987,
+          batchNumber: 9898741456,
           productionDate: new Date('10/21/2022'),
           state: 'PROCESANDO',
           shatterLevel: 0,

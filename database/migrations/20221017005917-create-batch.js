@@ -9,15 +9,12 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      sku: {
-        type: Sequelize.INTEGER
-      },
       productId: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
       batchNumber: {
-        type: Sequelize.INTEGER
+        type: Sequelize.BIGINT
       },
       productionDate: {
         type: Sequelize.DATE
