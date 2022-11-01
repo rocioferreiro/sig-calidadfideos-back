@@ -43,6 +43,12 @@ const login = async (req, res) => {
 
 const createBatch = async (req, res) => {
   try {
+    const oldBatch = await models.Batch.findOne({
+      where: { batchNumber: req.body.batchNumber }
+    })
+    if(oldBatch){
+      return res.status(400).json({ message: 'Ya existe un lote con ese número de lote'});
+    }
     const batch = await models.Batch.create(req.body);
     return res.status(201).json({
       batch
