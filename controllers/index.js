@@ -84,7 +84,10 @@ const getBatchById = async (req, res) => {
       include: [
         {
           model: models.Sample,
-          as: "samples"
+          as: "samples",
+          order: [
+            ['createdAt', 'DESC']
+          ]
         },
         {
           model: models.Product,
@@ -107,6 +110,9 @@ const getBatchById = async (req, res) => {
         // Turn your strings into dates, and then subtract them
         // to get a value that is either negative, positive, or zero.
         return new Date(b.date) - new Date(a.date);
+      });
+      batch.samples.sort(function(a,b){
+        return new Date(b.createdAt) - new Date(a.createdAt);
       });
       return res.status(200).json({ batch, changes });
     }
