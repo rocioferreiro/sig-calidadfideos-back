@@ -17,5 +17,11 @@ router.post('/samples/:batchId/:userId', controllers.createSample);
 router.post('/visual/:batchId/:userId', controllers.visualEdit);
 router.post('/cooking/:batchId/:userId', controllers.cookingEdit);
 router.get('/products', controllers.getProducts);
+router.get('/dashboardHeader', controllers.dashboardHeader);
+router.get('/efficiencyMonthly', controllers.efficiencyMonthly);
+router.get('/pncMonthly', controllers.pncMonthly);
+router.get('/concessionMonthly', controllers.concessionMonthly);
+router.get('/rejectedMonthly', controllers.rejectedMonthly);
+router.get('/pncByVisualMonthly', controllers.pncByVisualMonthly);
 
 module.exports = router;

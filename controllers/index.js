@@ -1,4 +1,5 @@
 const models = require("../database/models");
+const lodash = require('lodash');
 
 const getUsers = async (req, res) => {
   try {
@@ -161,9 +162,9 @@ const getBatchesByState = async (req, res) => {
     });
     let changes = [batches.length];
     for(let i = 0; i < batches.length; i++){
-      changes[i] = [batches[i].samples.length];
+      let subchanges = [batches[i].samples.length];
       for(let j = 0; j < batches[i].samples.length; j++){
-        changes[i][j] = await models.ChangeReport.findOne({
+        subchanges[j] = await models.ChangeReport.findOne({
           where: {newSampleId: batches[i].samples[j].id},
           include: [{
             model: models.User,
@@ -171,6 +172,7 @@ const getBatchesByState = async (req, res) => {
           }]
         })
       }
+      changes[i] = {id: batches[i].id, changes: subchanges}
     }
     if (batches) {
       return res.status(200).json({ batches, changes });
@@ -268,6 +270,199 @@ const cookingEdit = async (req, res) => {
   return res.status(201).json(result);
 }
 
+const dashboardHeader = async (req, res) => {
+  try {
+    let batches = await models.Batch.findAll({
+      include: [
+        {
+          model: models.Sample,
+          as: "samples"
+        },
+        {
+          model: models.Product,
+          as: 'product'
+        }
+      ]
+    });
+    batches = batches.filter(b => b.productionDate.getMonth() === new Date().getMonth() && b.productionDate.getFullYear() === new Date().getFullYear())
+    const analyzed = batches.filter(b => b.state !== 'PROCESANDO');
+    const pnc = analyzed.filter(b => b.state !== 'PARA LIBERAR');
+    const rejected = analyzed.filter(b => b.state === 'RECHAZADO');
+
+    const efficiency = (analyzed.length / batches.length) * 100;
+    const pncPercentage = (pnc.length / analyzed.length) * 100;
+    const rejectedPercentage = (rejected.length / analyzed.length) * 100;
+
+    return res.status(200).json({ efficiency, pncPercentage, rejectedPercentage });
+
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+}
+
+const efficiencyMonthly = async (req, res) => {
+  try {
+    let batches = await models.Batch.findAll({
+      include: [
+        {
+          model: models.Sample,
+          as: "samples"
+        },
+        {
+          model: models.Product,
+          as: 'product'
+        }
+      ]
+    });
+    const result = lodash.groupBy(batches, ({productionDate})=> new Date(productionDate).getMonth());
+    let efficiencyByMonth = [Object.keys(result).length]
+    for (let i = Object.keys(result)[0]-1+1; i < (Object.keys(result)[0]-1+1+Object.keys(result).length); i++) {
+      const analyzed = result[i.toString()].filter(b => b.state !== 'PROCESANDO');
+      const efficiency = (analyzed.length / result[i.toString()].length) * 100;
+      efficiencyByMonth[i-(Object.keys(result)[0])] = { month: i+1, value: efficiency }
+    }
+
+    return res.status(200).json({ efficiencyByMonth });
+
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+}
+
+const pncMonthly = async (req, res) => {
+  try {
+    let batches = await models.Batch.findAll({
+      include: [
+        {
+          model: models.Sample,
+          as: "samples"
+        },
+        {
+          model: models.Product,
+          as: 'product'
+        }
+      ]
+    });
+    const result = lodash.groupBy(batches, ({productionDate})=> new Date(productionDate).getMonth());
+    let pncByMonth = [Object.keys(result).length]
+    for (let i = Object.keys(result)[0]-1+1; i < (Object.keys(result)[0]-1+1+Object.keys(result).length); i++) {
+      const analyzed = result[i.toString()].filter(b => b.state !== 'PROCESANDO');
+      const pnc = analyzed.filter(b => b.state !== 'PARA LIBERAR');
+      const pncPercentage = (pnc.length / analyzed.length) * 100;
+      pncByMonth[i-(Object.keys(result)[0])] = { month: i+1, value: pncPercentage }
+    }
+
+    return res.status(200).json({ pncByMonth });
+
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+}
+
+const concessionMonthly = async (req, res) => {
+  try {
+    let batches = await models.Batch.findAll({
+      include: [
+        {
+          model: models.Sample,
+          as: "samples"
+        },
+        {
+          model: models.Product,
+          as: 'product'
+        }
+      ]
+    });
+    const result = lodash.groupBy(batches, ({productionDate})=> new Date(productionDate).getMonth());
+    let concessionByMonth = [Object.keys(result).length]
+    for (let i = Object.keys(result)[0]-1+1; i < (Object.keys(result)[0]-1+1+Object.keys(result).length); i++) {
+      const analyzed = result[i.toString()].filter(b => b.state !== 'PROCESANDO');
+      const delivered = analyzed.filter(b => b.state !== 'RECHAZADO');
+      const concession = delivered.filter(b => b.state === 'CONCESION');
+      const concessionPercentage = (concession.length / delivered.length) * 100;
+      concessionByMonth[i-(Object.keys(result)[0])] = { month: i+1, value: concessionPercentage }
+    }
+
+    return res.status(200).json({ concessionByMonth });
+
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+}
+
+const rejectedMonthly = async (req, res) => {
+  try {
+    let batches = await models.Batch.findAll({
+      include: [
+        {
+          model: models.Sample,
+          as: "samples"
+        },
+        {
+          model: models.Product,
+          as: 'product'
+        }
+      ]
+    });
+    const result = lodash.groupBy(batches, ({productionDate})=> new Date(productionDate).getMonth());
+    let rejectedByMonth = [Object.keys(result).length]
+    for (let i = Object.keys(result)[0]-1+1; i < (Object.keys(result)[0]-1+1+Object.keys(result).length); i++) {
+      const analyzed = result[i.toString()].filter(b => b.state !== 'PROCESANDO');
+      const rejected = analyzed.filter(b => b.state === 'RECHAZADO');
+      const rejectedPercentage = (rejected.length / analyzed.length) * 100;
+      rejectedByMonth[i-(Object.keys(result)[0])] = { month: i+1, value: rejectedPercentage }
+    }
+
+    return res.status(200).json({ rejectedByMonth });
+
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+}
+
+const pncByVisualMonthly = async (req, res) => {
+  try {
+    let batches = await models.Batch.findAll({
+      include: [
+        {
+          model: models.Sample,
+          as: "samples"
+        },
+        {
+          model: models.Product,
+          as: 'product'
+        }
+      ]
+    });
+    let changes = [batches.length];
+    for(let i = 0; i < batches.length; i++){
+      let subchanges = [batches[i].samples.length];
+      for(let j = 0; j < batches[i].samples.length; j++){
+        subchanges[j] = await models.ChangeReport.findOne({
+          where: {newSampleId: batches[i].samples[j].id},
+          include: [{
+            model: models.User,
+            as: "user"
+          }]
+        })
+      }
+      changes[i] = {id: batches[i].id, changes: subchanges}
+    }
+    const result = lodash.groupBy(batches, ({productionDate})=> new Date(productionDate).getMonth());
+    let rejectedByMonth = [Object.keys(result).length]
+    for (let i = Object.keys(result)[0]-1+1; i < (Object.keys(result)[0]-1+1+Object.keys(result).length); i++) {
+      const analyzed = result[i.toString()].filter(b => b.state !== 'PROCESANDO');
+      const pnc = analyzed.filter(b => b.state !== 'PARA LIBERAR');
+      const rejectedPercentage = (rejected.length / pnc.length) * 100;
+      rejectedByMonth[i-(Object.keys(result)[0])] = { month: i+1, value: rejectedPercentage }
+    }
+
+    return res.status(200).json({ rejectedByMonth });
+
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+}
 
 module.exports = {
   getUsers,
@@ -281,5 +476,11 @@ module.exports = {
   getProducts,
   visualEdit,
   cookingEdit,
-  getSampleById
+  getSampleById,
+  dashboardHeader,
+  efficiencyMonthly,
+  pncMonthly,
+  concessionMonthly,
+  rejectedMonthly,
+  pncByVisualMonthly
 };
