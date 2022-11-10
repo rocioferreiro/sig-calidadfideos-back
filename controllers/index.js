@@ -6,7 +6,7 @@ const getUsers = async (req, res) => {
     const users = await models.User.findAll();
     return res.status(200).json({ users });
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).send({error: error.message});
   }
 }
 
@@ -19,7 +19,7 @@ const getUserById = async (req, res) => {
     if (user) {
       return res.status(200).json({ user });
     }
-    return res.status(404).send("User with the specified ID does not exists");
+    return res.status(404).send({error: "User with the specified ID does not exists"});
   } catch (error) {
     return res.status(500).send(error.message);
   }
@@ -36,9 +36,9 @@ const login = async (req, res) => {
       if(user.password !== password) res.status(404).json("BAD CREDENTIALS");
       return res.status(200).json({ user });
     }
-    return res.status(404).send("User with the specified email does not exists");
+    return res.status(404).send({error: "User with the specified email does not exists"});
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).send({error: error.message});
   }
 }
 
@@ -48,7 +48,7 @@ const createBatch = async (req, res) => {
       where: { batchNumber: req.body.batchNumber }
     })
     if(oldBatch){
-      return res.status(400).json({ message: 'Ya existe un lote con ese número de lote'});
+      return res.status(400).json({ error: 'Ya existe un lote con ese número de lote'});
     }
     const batch = await models.Batch.create(req.body);
     return res.status(201).json({
@@ -79,7 +79,7 @@ const getBatches = async (req, res) => {
 
     return res.status(200).json({ batches });
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).send({error: error.message});
   }
 };
 
@@ -123,9 +123,9 @@ const getBatchById = async (req, res) => {
       });
       return res.status(200).json({ batch, changes });
     }
-    return res.status(404).send("Batch with the specified ID does not exists");
+    return res.status(404).send({error: "Batch with the specified ID does not exists"});
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).send({error: error.message});
   }
 };
 
@@ -138,9 +138,9 @@ const getSampleById = async (req, res) => {
     if (sample) {
       return res.status(200).json({ sample });
     }
-    return res.status(404).send("Sample with the specified ID does not exists");
+    return res.status(404).send({error: "Sample with the specified ID does not exists"});
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).send({error: error.message});
   }
 };
 
@@ -177,7 +177,7 @@ const getBatchesByState = async (req, res) => {
     if (batches) {
       return res.status(200).json({ batches, changes });
     }
-    return res.status(404).send("Batches with the specified state don't exist");
+    return res.status(404).send({error: "Batches with the specified state don't exist"});
   } catch (error) {
     return res.status(500).send(error.message);
   }
@@ -257,7 +257,7 @@ const getProducts = async (req, res) => {
     const prods = await models.Product.findAll();
     return res.status(200).json({ prods });
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).send({error: error.message});
   }
 }
 
@@ -303,7 +303,7 @@ const dashboardHeader = async (req, res) => {
     return res.status(200).json({ efficiency, pncPercentage, rejectedPercentage });
 
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).send({error: error.message});
   }
 }
 
@@ -332,7 +332,7 @@ const efficiencyMonthly = async (req, res) => {
     return res.status(200).json({ efficiencyByMonth });
 
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).send({error: error.message});
   }
 }
 
@@ -362,7 +362,7 @@ const pncMonthly = async (req, res) => {
     return res.status(200).json({ pncByMonth });
 
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).send({error: error.message});
   }
 }
 
@@ -393,7 +393,7 @@ const concessionMonthly = async (req, res) => {
     return res.status(200).json({ concessionByMonth });
 
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).send({error: error.message});
   }
 }
 
@@ -423,7 +423,7 @@ const rejectedMonthly = async (req, res) => {
     return res.status(200).json({ rejectedByMonth });
 
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).send({error: error.message});
   }
 }
 
@@ -468,7 +468,7 @@ const pncByVisualMonthly = async (req, res) => {
     return res.status(200).json({ pncByMonth });
 
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).send({error: error.message});
   }
 }
 
