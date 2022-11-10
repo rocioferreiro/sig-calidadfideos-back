@@ -113,7 +113,7 @@ const getBatchById = async (req, res) => {
           }]
         })
       }
-      changes.sort(function(a,b){
+      changes.filter(c => c).sort(function(a,b){
         // Turn your strings into dates, and then subtract them
         // to get a value that is either negative, positive, or zero.
         return new Date(b.date) - new Date(a.date);
@@ -227,6 +227,13 @@ const newSample = async (batchId, userId, type, shatterLevel, sampleBody) => {
 const createSample = async (req, res) => {
   try {
     const { batchId, userId } = req.params;
+    const batch = await models.Batch.findOne({
+      where: { id: batchId },
+    });
+    if((new Date(batch.productionDate).getTime() - (7 * 24 * 60 * 60 * 1000)) > new Date(req.body.packingDate).getTime() ||
+      (new Date(batch.productionDate).getTime() + (7 * 24 * 60 * 60 * 1000)) < new Date(req.body.packingDate).getTime()) {
+      return res.status(400).json({ error: 'La fecha de empaquetado debe estar cerca de la fecha de produccion del lote en cuestion.' });
+    }
     const sample = await models.Sample.create(req.body);
     const relation = await models.BatchSample.create({BatchId: batchId, batchId: batchId, SampleId: sample.dataValues.id});
     const change = await models.ChangeReport.create({
@@ -446,18 +453,19 @@ const pncByVisualMonthly = async (req, res) => {
           }]
         })
       }
-      changes[i] = {id: batches[i].id, changes: subchanges}
+      changes[i] = {id: batches[i].id, changes: subchanges.filter(c=>c)}
     }
     const result = lodash.groupBy(batches, ({productionDate})=> new Date(productionDate).getMonth());
-    let rejectedByMonth = [Object.keys(result).length]
+    let pncByMonth = [Object.keys(result).length]
     for (let i = Object.keys(result)[0]-1+1; i < (Object.keys(result)[0]-1+1+Object.keys(result).length); i++) {
       const analyzed = result[i.toString()].filter(b => b.state !== 'PROCESANDO');
       const pnc = analyzed.filter(b => b.state !== 'PARA LIBERAR');
-      const rejectedPercentage = (rejected.length / pnc.length) * 100;
-      rejectedByMonth[i-(Object.keys(result)[0])] = { month: i+1, value: rejectedPercentage }
+      const visualTrizado = pnc.filter(b => changes.filter(c => c.id === b.id)[0].changes.filter(c => c.type === 'visual' && c.shatterLevel > 0).length > 0)
+      const pncVisualPercentage = (visualTrizado.length / pnc.length) * 100;
+      pncByMonth[i-(Object.keys(result)[0])] = { month: i+1, value: pncVisualPercentage }
     }
 
-    return res.status(200).json({ rejectedByMonth });
+    return res.status(200).json({ pncByMonth });
 
   } catch (error) {
     return res.status(500).send(error.message);
