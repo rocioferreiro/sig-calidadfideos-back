@@ -50,6 +50,9 @@ const createBatch = async (req, res) => {
     if(oldBatch){
       return res.status(400).json({ error: 'Ya existe un lote con ese número de lote'});
     }
+    if(new Date().getTime() < new Date(req.body.productionDate).getTime()) {
+      return res.status(400).json({ error: 'La fecha de produccion debe ser anterior a hoy.' });
+    }
     const batch = await models.Batch.create(req.body);
     return res.status(201).json({
       batch
@@ -230,8 +233,8 @@ const createSample = async (req, res) => {
     const batch = await models.Batch.findOne({
       where: { id: batchId },
     });
-    if((new Date(batch.productionDate).getTime() - (7 * 24 * 60 * 60 * 1000)) > new Date(req.body.packingDate).getTime() ||
-      (new Date(batch.productionDate).getTime() + (7 * 24 * 60 * 60 * 1000)) < new Date(req.body.packingDate).getTime()) {
+    if((new Date(batch.productionDate).getTime() - (24 * 60 * 60 * 1000)) > new Date(req.body.packingDate).getTime() ||
+      (new Date(batch.productionDate).getTime() + (24 * 60 * 60 * 1000)) < new Date(req.body.packingDate).getTime()) {
       return res.status(400).json({ error: 'La fecha de empaquetado debe estar cerca de la fecha de produccion del lote en cuestion.' });
     }
     const sample = await models.Sample.create(req.body);
