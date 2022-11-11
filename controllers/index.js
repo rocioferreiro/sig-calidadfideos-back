@@ -110,10 +110,16 @@ const getBatchById = async (req, res) => {
       for(let i = 0; i < batch.samples.length; i ++) {
         changes[i] = await models.ChangeReport.findOne({
           where: {newSampleId: batch.samples[i].id},
-          include: [{
-            model: models.User,
-            as: "user"
-          }]
+          include: [
+            {
+              model: models.User,
+              as: "user"
+            },
+            {
+              model: models.Sample,
+              as: "newSample",
+            },
+          ]
         })
       }
       changes.filter(c => c).sort(function(a,b){
